@@ -13,3 +13,5 @@ export interface Bookmark {
     address: string;
     image: string;
 }
+
+export type SearchSelection = 'zipcode' | 'name' | 'type';

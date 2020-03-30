@@ -16,6 +16,7 @@ export type AppNavigatorParams = {
     [AppRoute.HOME]: undefined;
     [AppRoute.BOOKMARK]: undefined;
     [AppRoute.DETAIL]: { tree: TreeType };
+    [AppRoute.FILTER]: undefined;
 };
 
 export const AppNavigator = (): React.ReactElement => {

@@ -81,6 +81,11 @@ class HomeScreen extends Component<Props, State> {
         navigation.push(AppRoute.DETAIL, { tree });
     };
 
+    navigateToFilter = () => {
+        const { navigation } = this.props;
+        navigation.navigate(AppRoute.FILTER);
+    };
+
     // functions
     getTrees = () => {
         const { page, region } = this.state;
@@ -131,7 +136,7 @@ class HomeScreen extends Component<Props, State> {
                         </Marker>
                     ))}
                 </MapView>
-                <SearchBar />
+                <SearchBar selectOption="zipcode" onPressSelection={() => {}} onPressFilter={this.navigateToFilter} />
                 <TreeListModal
                     trees={trees}
                     onPress={tree => {

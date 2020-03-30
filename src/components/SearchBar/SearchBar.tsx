@@ -4,16 +4,18 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../../styles/colors';
 import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
+import { SearchSelection } from '../../types/types';
 
 Icon.loadFont();
 
 interface Props {
-    selectOption: string;
-    onPress: () => void;
+    selectOption: SearchSelection;
+    onPressSelection: () => void;
+    onPressFilter: () => void;
 }
 
 const SearchBar = (props: Props) => {
-    const { onPress } = props;
+    const { onPressSelection, onPressFilter } = props;
 
     return (
         <View style={styles.container}>
@@ -26,11 +28,11 @@ const SearchBar = (props: Props) => {
                 />
             </View>
             <View style={styles.search}>
-                <TouchableOpacity style={styles.selection} onPress={onPress}>
+                <TouchableOpacity style={styles.selection} onPress={onPressSelection}>
                     <FontIcon name="home" color={Colors.lightGray} size={20} style={{ marginRight: 5 }} />
                     <Text style={styles.selectionText}>Zipcode</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.filter} onPress={onPress}>
+                <TouchableOpacity style={styles.filter} onPress={onPressFilter}>
                     <FontIcon
                         name="sliders"
                         color={Colors.lightGray}
