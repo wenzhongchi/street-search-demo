@@ -1,5 +1,5 @@
 export interface TreeData {
-    data: [string[]];
+    data: (string | number | null)[][];
 }
 
 export interface Search {

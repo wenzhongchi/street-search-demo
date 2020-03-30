@@ -64,7 +64,7 @@ class HomeScreen extends Component<Props, State> {
             .isEmpty()
             .then(isEmpty => {
                 if (isEmpty) {
-                    data.forEach((eachTree: string[]) => {
+                    data.forEach(eachTree => {
                         const tree = convertRawArrayToTree(eachTree);
                         treeActions.saveTree(tree);
                     });

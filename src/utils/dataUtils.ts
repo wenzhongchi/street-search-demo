@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { TreeType } from './../storage/models/tree';
 
-const convertRawArrayToTree = (treeArray: string[]): TreeType => {
+const convertRawArrayToTree = (treeArray: any): TreeType => {
     const tree = _.map(treeArray, eachField => {
         if (_.isNull(eachField)) {
             return '';

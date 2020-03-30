@@ -11,6 +11,9 @@ import { AppDispatch } from '../../store/store.js';
 import { RootState } from '../../store/rootReducer.js';
 import { addBookmark, removeBookmark } from '../../store/bookmark';
 import { Bookmark } from '../../types/types';
+import { FlatList } from 'react-native-gesture-handler';
+import BookmarkList from '../../components/BookmarkList/BookmarkList';
+import Colors from '../../styles/colors';
 
 interface Props {
     navigation: StackNavigationProp<AppNavigatorParams, AppRoute.BOOKMARK>;
@@ -20,16 +23,38 @@ interface Props {
     removeBookmark: (bookmark: Bookmark) => void;
 }
 
-class CartScreen extends Component<Props> {
+class BookmarkScreen extends Component<Props> {
     navigateToDetail = () => {
         const { navigation } = this.props;
         navigation.push(AppRoute.DETAIL);
     };
 
-    render() {
-        const { bookmarks, addBookmark, removeBookmark } = this.props;
+    renderItem = ({ item }: { item: Bookmark }) => {
+        const { removeBookmark } = this.props;
+        return (
+            <BookmarkList
+                bookmark={item}
+                isBookmarked
+                onPress={bookmark => {
+                    removeBookmark(bookmark);
+                }}
+            />
+        );
+    };
 
-        return <SafeAreaView style={styles.safeArea}></SafeAreaView>;
+    render() {
+        const { bookmarks } = this.props;
+
+        return (
+            <SafeAreaView style={styles.safeArea}>
+                <FlatList
+                    data={bookmarks}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item: Bookmark) => item.treeId}
+                    style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.white }}
+                />
+            </SafeAreaView>
+        );
     }
 }
 
@@ -48,4 +73,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => ({
     removeBookmark: (bookmark: Bookmark) => dispatch(removeBookmark(bookmark)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(BookmarkScreen);

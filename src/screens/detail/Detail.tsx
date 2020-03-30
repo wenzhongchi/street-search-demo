@@ -32,7 +32,7 @@ interface Props {
     removeBookmark: (bookmark: Bookmark) => void;
 }
 
-class NoteScreen extends Component<Props> {
+class DetailScreen extends Component<Props> {
     componentDidMount() {
         const { navigation } = this.props;
         navigation.setOptions({ headerShown: false });
@@ -205,4 +205,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => ({
     removeBookmark: (bookmark: Bookmark) => dispatch(removeBookmark(bookmark)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NoteScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailScreen);
