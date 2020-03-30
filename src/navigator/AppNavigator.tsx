@@ -7,6 +7,7 @@ import { AppRoute } from './AppRoute';
 import HomeStack from './HomeStack';
 import BookmarkStack from './BookmarkStack';
 import Colors from '../styles/colors';
+import { TreeType } from '../storage/models/tree';
 
 // required to load fonts
 Icon.loadFont();
@@ -14,7 +15,7 @@ Icon.loadFont();
 export type AppNavigatorParams = {
     [AppRoute.HOME]: undefined;
     [AppRoute.BOOKMARK]: undefined;
-    [AppRoute.DETAIL]: undefined;
+    [AppRoute.DETAIL]: { tree: TreeType };
 };
 
 export const AppNavigator = (): React.ReactElement => {

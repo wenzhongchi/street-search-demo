@@ -39,8 +39,8 @@ export type TreeType = {
     ntaName: string;
     boroCt: string;
     state: string;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
     xSp: string;
     ySp: string;
     createdAt: string;
@@ -92,8 +92,8 @@ class TreeSchema {
             ntaName: { type: 'string' },
             boroCt: { type: 'string' },
             state: { type: 'string' },
-            latitude: { type: 'string' },
-            longitude: { type: 'string' },
+            latitude: { type: 'double' },
+            longitude: { type: 'double' },
             xSp: { type: 'string' },
             ySp: { type: 'string' },
             createdAt: { type: 'string' },

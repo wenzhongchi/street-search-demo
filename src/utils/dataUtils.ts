@@ -46,12 +46,63 @@ const convertRawArrayToTree = (treeArray: string[]): TreeType => {
         ntaName: tree[43],
         boroCt: tree[44],
         state: tree[45],
-        latitude: tree[46],
-        longitude: tree[47],
+        latitude: Number(tree[46]),
+        longitude: Number(tree[47]),
         xSp: tree[48],
         ySp: tree[49],
         createdAt: tree[8],
     };
 };
 
-export { convertRawArrayToTree };
+const convertRealmObjectToTree = (tree: TreeType & Realm.Object): TreeType => {
+    return {
+        id: tree.id,
+        blockId: tree.blockId,
+        theGeom: tree.theGeom,
+        treeDbh: tree.treeDbh,
+        stumpDiam: tree.stumpDiam,
+        curbLoc: tree.curbLoc,
+        status: tree.status,
+        health: tree.health,
+        spcLatin: tree.spcLatin,
+        spcCommon: tree.spcCommon,
+        steward: tree.steward,
+        guards: tree.guards,
+        sidewalk: tree.sidewalk,
+        userType: tree.userType,
+        problems: tree.problems,
+        rootStone: tree.rootStone,
+        rootGrate: tree.rootGrate,
+        rootOther: tree.rootOther,
+        trnkWire: tree.trnkWire,
+        trnkLight: tree.trnkLight,
+        trnkOther: tree.trnkOther,
+        brnchLigh: tree.brnchLigh,
+        brnchShoe: tree.brnchShoe,
+        brnchOthe: tree.brnchOthe,
+        address: tree.address,
+        zipcode: tree.zipcode,
+        zipCity: tree.zipCity,
+        cbNum: tree.cbNum,
+        borocode: tree.borocode,
+        boroname: tree.boroname,
+        cncldist: tree.cncldist,
+        stAssem: tree.stAssem,
+        stSenate: tree.stSenate,
+        nta: tree.nta,
+        ntaName: tree.ntaName,
+        boroCt: tree.boroCt,
+        state: tree.state,
+        latitude: tree.latitude,
+        longitude: tree.longitude,
+        xSp: tree.xSp,
+        ySp: tree.ySp,
+        createdAt: tree.createdAt,
+    };
+};
+
+const capitalizeTreeName = (name: string) => {
+    return _.replace(_.capitalize(name), ' ', '');
+};
+
+export { convertRawArrayToTree, capitalizeTreeName, convertRealmObjectToTree };

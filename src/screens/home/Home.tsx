@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Region, Marker } from 'react-native-maps';
 
-import { Product, TreeData } from '../../types/types';
+import { TreeData, Search } from '../../types/types';
 import { AppRoute } from '../../navigator/AppRoute';
 import { AppNavigatorParams } from '../../navigator/AppNavigator';
-import { addToCart } from '../../store/cart';
 import { AppDispatch } from '../../store/store';
 import { RootState } from '../../store/rootReducer';
 import { treeActions } from '../../storage/realm';
@@ -20,15 +19,39 @@ import { convertRawArrayToTree } from '../../utils/dataUtils';
 import { LATITUDE_DELTA, LONGITUDE_DELTA } from '../../constants/constant';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import TreeListModal from '../../components/Modal/TreeListModal';
+import { TreeType } from '../../storage/models/tree';
+import TreeMarker from '../../components/TreeMarker/TreeMarker';
+import { addSearch } from '../../store/search';
+
+const INITIAL_REGION = {
+    latitude: 40.72309177,
+    longitude: -73.84421522,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+};
 
 interface Props {
     navigation: StackNavigationProp<AppNavigatorParams, AppRoute.HOME>;
     route: RouteProp<AppNavigatorParams, AppRoute.HOME>;
-    count: number;
-    addToCart: (product: Product) => void;
+    searches: Search[];
+    addSearch: (search: Search) => void;
 }
 
-class HomeScreen extends Component<Props> {
+interface State {
+    page: number; // use for pagination to load more
+    region: Region;
+    trees: TreeType[];
+    selectedTree?: TreeType;
+}
+
+class HomeScreen extends Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        this.state = { page: 1, trees: [], region: INITIAL_REGION };
+    }
+
+    // lifeCycle
+
     componentDidMount() {
         const { navigation } = this.props;
 
@@ -36,19 +59,51 @@ class HomeScreen extends Component<Props> {
 
         const { data } = treeData as TreeData;
         console.log(Realm.defaultPath);
-        // data.forEach(eachTree => {
-        //     const tree = convertRawArrayToTree(eachTree);
-        //     treeActions.saveTree(tree);
-        // });
+
+        treeActions
+            .isEmpty()
+            .then(isEmpty => {
+                if (isEmpty) {
+                    data.forEach((eachTree: string[]) => {
+                        const tree = convertRawArrayToTree(eachTree);
+                        treeActions.saveTree(tree);
+                    });
+                }
+            })
+            .catch(() => {
+                Alert.alert('Please restart your app.');
+            });
     }
 
-    navigateToDetail = () => {
+    // navigation
+    navigateToDetail = (tree: TreeType) => {
         const { navigation } = this.props;
-        navigation.push(AppRoute.DETAIL);
+        navigation.push(AppRoute.DETAIL, { tree });
     };
 
+    // functions
+    getTrees = () => {
+        const { page, region } = this.state;
+        console.log(page);
+        treeActions
+            .getTreesWithRegion(region, page)
+            .then(trees => {
+                this.setState({ trees });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
+    onRegionChangeComplete = (region: Region) => {
+        console.log(region);
+        this.setState({ region });
+        this.getTrees();
+    };
+
+    // render
     render() {
-        const {} = this.props;
+        const { trees, page } = this.state;
 
         return (
             <SafeAreaView style={styles.safeArea}>
@@ -57,15 +112,35 @@ class HomeScreen extends Component<Props> {
                     style={styles.map}
                     customMapStyle={MapStyles}
                     zoomEnabled={true}
-                    initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA,
-                    }}
-                ></MapView>
+                    initialRegion={INITIAL_REGION}
+                    onRegionChangeComplete={this.onRegionChangeComplete}
+                >
+                    {trees.map(tree => (
+                        <Marker
+                            tracksViewChanges={false}
+                            key={tree.id}
+                            coordinate={{
+                                longitude: tree.longitude,
+                                latitude: tree.latitude,
+                            }}
+                            onPress={() => {
+                                this.navigateToDetail(tree);
+                            }}
+                        >
+                            <TreeMarker treeName={tree.spcCommon} />
+                        </Marker>
+                    ))}
+                </MapView>
                 <SearchBar />
-                <TreeListModal />
+                <TreeListModal
+                    trees={trees}
+                    onPress={tree => {
+                        this.navigateToDetail(tree);
+                    }}
+                    onLoadMore={() => {
+                        this.setState({ page: page + 1 }, () => this.getTrees());
+                    }}
+                />
             </SafeAreaView>
         );
     }
@@ -80,12 +155,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = ({ cart }: RootState) => ({
-    count: cart.count,
+const mapStateToProps = ({ search: { searches } }: RootState) => ({
+    searches,
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-    addToCart: (product: Product) => dispatch(addToCart(product)),
+    addSearch: (search: Search) => dispatch(addSearch(search)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

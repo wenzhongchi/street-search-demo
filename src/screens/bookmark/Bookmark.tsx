@@ -1,43 +1,35 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Cart } from '../../types/types';
 import { AppRoute } from '../../navigator/AppRoute';
 import { AppNavigatorParams } from '../../navigator/AppNavigator';
 import { AppDispatch } from '../../store/store.js';
 import { RootState } from '../../store/rootReducer.js';
-import { removeFromCart } from '../../store/cart';
-import CartItem from '../../components/CartItem';
+import { addBookmark, removeBookmark } from '../../store/bookmark';
+import { Bookmark } from '../../types/types';
 
 interface Props {
     navigation: StackNavigationProp<AppNavigatorParams, AppRoute.BOOKMARK>;
     route: RouteProp<AppNavigatorParams, AppRoute.BOOKMARK>;
-    carts: Cart[];
-    removeFromCart: (cart: Cart) => void;
+    bookmarks: Bookmark[];
+    addBookmark: (bookmark: Bookmark) => void;
+    removeBookmark: (bookmark: Bookmark) => void;
 }
 
 class CartScreen extends Component<Props> {
-    navigateToCart = () => {
+    navigateToDetail = () => {
         const { navigation } = this.props;
         navigation.push(AppRoute.DETAIL);
     };
 
     render() {
-        const { carts, removeFromCart } = this.props;
+        const { bookmarks, addBookmark, removeBookmark } = this.props;
 
-        return (
-            <SafeAreaView style={styles.safeArea}>
-                <ScrollView contentContainerStyle={styles.scrollView}>
-                    {carts.map(cart => {
-                        return <CartItem cartItem={cart} key={cart.id} onPress={() => removeFromCart(cart)} />;
-                    })}
-                </ScrollView>
-            </SafeAreaView>
-        );
+        return <SafeAreaView style={styles.safeArea}></SafeAreaView>;
     }
 }
 
@@ -45,19 +37,15 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
     },
-    scrollView: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 20 },
 });
 
-const mapStateToProps = ({ cart }: RootState) => {
-    return {
-        carts: cart.carts,
-    };
-};
+const mapStateToProps = ({ bookmark: { bookmarks } }: RootState) => ({
+    bookmarks,
+});
 
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-    return {
-        removeFromCart: (cart: Cart) => dispatch(removeFromCart(cart)),
-    };
-};
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+    addBookmark: (bookmark: Bookmark) => dispatch(addBookmark(bookmark)),
+    removeBookmark: (bookmark: Bookmark) => dispatch(removeBookmark(bookmark)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);

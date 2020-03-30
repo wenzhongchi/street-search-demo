@@ -14,8 +14,8 @@ const migrations = {
 };
 
 export const persistConfig = {
-    key: 'lively',
-    whitelist: ['cart', 'note'],
+    key: 'yieldstreet',
+    whitelist: ['search', 'bookmark'],
     storage: AsyncStorage,
     debug: true,
     migrate: createMigrate(migrations, { debug: true }),

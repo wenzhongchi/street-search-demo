@@ -1,11 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import cartReducer from './cart';
-import noteReducer from './note';
+import bookmarkReducer from './bookmark';
+import searchReducer from './search';
 
 const rootReducer = combineReducers({
-    cart: cartReducer,
-    note: noteReducer,
+    bookmark: bookmarkReducer,
+    search: searchReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

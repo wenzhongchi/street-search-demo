@@ -1,17 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { TClose } from 'react-native-modalize/lib/options';
 import { screenHeight } from '../../utils/screenUtils';
 import { TreeType } from '../../storage/models/tree';
 import TreeList from '../TreeList/TreeList';
+import Colors from '../../styles/colors';
 
 interface Props {
     trees: TreeType[];
+    onLoadMore: () => void;
+    onPress: (tree: TreeType) => void;
 }
 
-class TreeListModal extends React.Component<Props> {
+interface State {
+    scrolled: boolean;
+}
+
+class TreeListModal extends React.Component<Props, State> {
     modal = React.createRef<Modalize>();
+
+    constructor(props: Props) {
+        super(props);
+        this.state = { scrolled: false };
+    }
 
     closeModal = (dest: TClose) => {
         if (this.modal.current) {
@@ -19,14 +31,36 @@ class TreeListModal extends React.Component<Props> {
         }
     };
 
-    renderHeader = () => (
-        <View style={styles.header}>
-            <Text style={{}}>{'Introduction'.toUpperCase()}</Text>
-        </View>
-    );
+    handleLoadMore = () => {
+        const { onLoadMore } = this.props;
+        const { scrolled } = this.state;
+        // only loading more if there is scroll event
+        if (scrolled) {
+            this.setState({ scrolled: false });
+            onLoadMore();
+        }
+    };
+
+    renderHeader = () => {
+        const { trees } = this.props;
+        return (
+            <View style={styles.header}>
+                <Text style={{ fontSize: 28 }}>{`${trees.length} trees`}</Text>
+            </View>
+        );
+    };
 
     renderItem = ({ item }: { item: TreeType }) => {
-        return <TreeList></TreeList>;
+        const { onPress } = this.props;
+        return <TreeList tree={item} onPress={tree => onPress(tree)} />;
+    };
+
+    renderFooter = () => {
+        return (
+            <View style={{ height: 50, justifyContent: 'center' }}>
+                <ActivityIndicator color={Colors.lightGray} />
+            </View>
+        );
     };
 
     render() {
@@ -44,6 +78,13 @@ class TreeListModal extends React.Component<Props> {
                     renderItem: this.renderItem,
                     keyExtractor: (item: TreeType) => item.id,
                     showsVerticalScrollIndicator: false,
+                    ListFooterComponent: this.renderFooter,
+                    onEndReachedThreshold: 0.1,
+                    onEndReached: this.handleLoadMore,
+                    onMomentumScrollBegin: () => {
+                        console.log('scrolled');
+                        this.setState({ scrolled: true });
+                    },
                 }}
             />
         );
@@ -52,10 +93,12 @@ class TreeListModal extends React.Component<Props> {
 
 const styles = StyleSheet.create({
     header: {
-        padding: 20,
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingBottom: 10,
     },
     modal: {
-        shadowColor: '#000',
+        shadowColor: Colors.black,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.45,
         shadowRadius: 16,
