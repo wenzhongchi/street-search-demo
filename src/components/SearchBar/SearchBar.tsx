@@ -11,12 +11,13 @@ import SearchOptionList from './SearchOptionList';
 Icon.loadFont();
 
 interface Props {
-    onPressSelection: () => void;
+    onPressSelection: (option: SearchSelection) => void;
+    onTextChanged: (text: string) => void;
     onPressFilter: () => void;
 }
 
 const SearchBar = (props: Props) => {
-    const { onPressSelection, onPressFilter } = props;
+    const { onPressSelection, onPressFilter, onTextChanged } = props;
     const [option, setOption] = useState('zipcode');
     const [optionOpen, setOptionOpen] = useState(false);
 
@@ -26,7 +27,6 @@ const SearchBar = (props: Props) => {
                 return (
                     <SearchOption
                         onPress={() => {
-                            onPressSelection();
                             setOption(option);
                             setOptionOpen(!optionOpen);
                         }}
@@ -39,7 +39,6 @@ const SearchBar = (props: Props) => {
                 return (
                     <SearchOption
                         onPress={() => {
-                            onPressSelection();
                             setOption(option);
                             setOptionOpen(!optionOpen);
                         }}
@@ -52,7 +51,6 @@ const SearchBar = (props: Props) => {
                 return (
                     <SearchOption
                         onPress={() => {
-                            onPressSelection();
                             setOption(option);
                             setOptionOpen(!optionOpen);
                         }}
@@ -80,6 +78,10 @@ const SearchBar = (props: Props) => {
                         style={styles.searchInput}
                         placeholder="Start typing..."
                         placeholderTextColor={Colors.placeholder}
+                        onEndEditing={event => {
+                            console.log(event.nativeEvent.text);
+                            onTextChanged(event.nativeEvent.text);
+                        }}
                     />
                 </View>
                 <View style={styles.search}>
@@ -110,7 +112,7 @@ const SearchBar = (props: Props) => {
                     </Text>
                     <SearchOptionList
                         onPress={() => {
-                            onPressSelection();
+                            onPressSelection('zipcode');
                             setOption('zipcode');
                             setOptionOpen(!optionOpen);
                         }}
@@ -121,7 +123,7 @@ const SearchBar = (props: Props) => {
                     />
                     <SearchOptionList
                         onPress={() => {
-                            onPressSelection();
+                            onPressSelection('name');
                             setOption('name');
                             setOptionOpen(!optionOpen);
                         }}
@@ -132,7 +134,7 @@ const SearchBar = (props: Props) => {
                     />
                     <SearchOptionList
                         onPress={() => {
-                            onPressSelection();
+                            onPressSelection('type');
                             setOption('type');
                             setOptionOpen(!optionOpen);
                         }}
@@ -191,6 +193,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 10,
     },
     searchInput: {
+        width: 150,
         color: Colors.black,
         fontSize: 15,
     },

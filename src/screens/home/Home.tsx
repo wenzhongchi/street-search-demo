@@ -42,12 +42,13 @@ interface State {
     region: Region;
     trees: TreeType[];
     searchSelection: SearchSelection;
+    searchText: string;
 }
 
 class HomeScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { page: 1, trees: [], region: INITIAL_REGION, searchSelection: 'zipcode' };
+        this.state = { page: 1, trees: [], region: INITIAL_REGION, searchSelection: 'zipcode', searchText: '' };
     }
 
     // lifeCycle
@@ -88,10 +89,11 @@ class HomeScreen extends Component<Props, State> {
 
     // functions
     getTrees = () => {
-        const { page, region } = this.state;
-        console.log(page);
+        const { page, region, searchSelection, searchText } = this.state;
+        console.log(searchText);
+        console.log(searchSelection);
         treeActions
-            .getTreesWithRegion(region, page)
+            .getTreesWithRegion(region, page, searchSelection, searchText)
             .then(trees => {
                 this.setState({ trees });
             })
@@ -136,7 +138,17 @@ class HomeScreen extends Component<Props, State> {
                         </Marker>
                     ))}
                 </MapView>
-                <SearchBar onPressSelection={() => {}} onPressFilter={this.navigateToFilter} />
+                <SearchBar
+                    onPressSelection={option => {
+                        this.setState({ searchSelection: option });
+                    }}
+                    onPressFilter={this.navigateToFilter}
+                    onTextChanged={text => {
+                        this.setState({ searchText: text }, () => {
+                            this.getTrees();
+                        });
+                    }}
+                />
                 <TreeListModal
                     trees={trees}
                     onPress={tree => {

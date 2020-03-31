@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -11,9 +11,6 @@ import { AppDispatch } from '../../store/store.js';
 import { RootState } from '../../store/rootReducer.js';
 import { addBookmark, removeBookmark } from '../../store/bookmark';
 import { Bookmark } from '../../types/types';
-import { FlatList } from 'react-native-gesture-handler';
-import BookmarkList from '../../components/BookmarkList/BookmarkList';
-import Colors from '../../styles/colors';
 
 interface Props {
     navigation: StackNavigationProp<AppNavigatorParams, AppRoute.BOOKMARK>;
@@ -23,31 +20,15 @@ interface Props {
     removeBookmark: (bookmark: Bookmark) => void;
 }
 
-class BookmarkScreen extends Component<Props> {
-    navigateToDetail = () => {
-        const { navigation } = this.props;
-        navigation.push(AppRoute.DETAIL);
-    };
-
-    renderItem = ({ item }: { item: Bookmark }) => {
-        const { removeBookmark } = this.props;
-        return (
-            <BookmarkList
-                bookmark={item}
-                isBookmarked
-                onPress={bookmark => {
-                    removeBookmark(bookmark);
-                }}
-            />
-        );
-    };
-
+class FilterScreen extends Component<Props> {
     render() {
-        const { bookmarks } = this.props;
-
         return (
             <SafeAreaView style={styles.safeArea}>
-                <View></View>
+                <View>
+                    <Text
+                        style={{ alignSelf: 'center' }}
+                    >{`Will Implement Filters if have more time, such as \ntree health, sidewalk or not, etc`}</Text>
+                </View>
             </SafeAreaView>
         );
     }
@@ -68,4 +49,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => ({
     removeBookmark: (bookmark: Bookmark) => dispatch(removeBookmark(bookmark)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookmarkScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterScreen);
