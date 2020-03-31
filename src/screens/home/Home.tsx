@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import MapView, { PROVIDER_GOOGLE, Region, Marker } from 'react-native-maps';
+import SplashScreen from 'react-native-splash-screen';
 
 import { TreeData, Search, SearchSelection } from '../../types/types';
 import { AppRoute } from '../../navigator/AppRoute';
@@ -69,6 +70,9 @@ class HomeScreen extends Component<Props, State> {
                         const tree = convertRawArrayToTree(eachTree);
                         treeActions.saveTree(tree);
                     });
+                    SplashScreen.hide();
+                } else {
+                    SplashScreen.hide();
                 }
             })
             .catch(() => {
