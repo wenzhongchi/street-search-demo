@@ -9,7 +9,7 @@
         "test": "jest",
         "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
         "pod": "cd ios && pod install",
-        "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf android/app/build && rm -rf node_modules/ && yarn cache clean --force && yarn install && yarn pod"
+        "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf ios/Pods && rm -rf android/app/build && rm -rf node_modules/ && yarn cache clean --force && yarn install && yarn pod"
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.7.1",

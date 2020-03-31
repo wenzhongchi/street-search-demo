@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../../styles/colors';
 import MarkerIcon from '../../assets/svg/Marker';
 import TreeImage from '../TreeImage/TreeImage';
 import { capitalizeTreeName } from '../../utils/dataUtils';
 
 interface Props {
-    treeName: string;
+    treeName?: string;
 }
 
 const TreeMarker = (props: Props) => {
@@ -34,7 +35,11 @@ const TreeMarker = (props: Props) => {
                     position: 'absolute',
                 }}
             >
-                <TreeImage name={capitalizeTreeName(treeName)} size={25} color={Colors.green} />
+                {treeName ? (
+                    <TreeImage name={capitalizeTreeName(treeName)} size={25} color={Colors.green} />
+                ) : (
+                    <Icon name="tree" size={25} color={Colors.green} />
+                )}
             </View>
         </View>
     );

@@ -7,7 +7,7 @@ import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import MapView, { PROVIDER_GOOGLE, Region, Marker } from 'react-native-maps';
 
-import { TreeData, Search } from '../../types/types';
+import { TreeData, Search, SearchSelection } from '../../types/types';
 import { AppRoute } from '../../navigator/AppRoute';
 import { AppNavigatorParams } from '../../navigator/AppNavigator';
 import { AppDispatch } from '../../store/store';
@@ -41,13 +41,13 @@ interface State {
     page: number; // use for pagination to load more
     region: Region;
     trees: TreeType[];
-    selectedTree?: TreeType;
+    searchSelection: SearchSelection;
 }
 
 class HomeScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { page: 1, trees: [], region: INITIAL_REGION };
+        this.state = { page: 1, trees: [], region: INITIAL_REGION, searchSelection: 'zipcode' };
     }
 
     // lifeCycle
@@ -132,11 +132,11 @@ class HomeScreen extends Component<Props, State> {
                                 this.navigateToDetail(tree);
                             }}
                         >
-                            <TreeMarker treeName={tree.spcCommon} />
+                            <TreeMarker />
                         </Marker>
                     ))}
                 </MapView>
-                <SearchBar selectOption="zipcode" onPressSelection={() => {}} onPressFilter={this.navigateToFilter} />
+                <SearchBar onPressSelection={() => {}} onPressFilter={this.navigateToFilter} />
                 <TreeListModal
                     trees={trees}
                     onPress={tree => {

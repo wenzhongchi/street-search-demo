@@ -5,7 +5,7 @@ enum Colors {
     lightGray = '#bec7c9',
     red = 'red',
     green = 'green',
-    clear = 'clear',
+    clear = 'transparent',
 
     textColor = '#202529',
 
@@ -16,6 +16,8 @@ enum Colors {
 
     buttonAdd = '#0c9608',
     buttonRemove = '#e5393c',
+
+    dropdownBackground = '#f4f4f4',
 
     tabActive = '#0c9608',
 }
